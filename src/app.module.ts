@@ -14,6 +14,7 @@ import { ConfigModule } from '@nestjs/config'
     }),
     PostsModule,
     SharedModule,
+    
   ],
   controllers: [AppController, PostsController],
   providers: [AppService, PostsService],
