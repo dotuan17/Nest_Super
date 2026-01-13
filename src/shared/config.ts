@@ -1,5 +1,5 @@
 import { plainToInstance } from 'class-transformer'
-import { IsNumber, IsString, validateSync } from 'class-validator'
+import { IsString, validateSync } from 'class-validator'
 import fs from 'fs'
 import path from 'path'
 import { config } from 'dotenv'
@@ -29,9 +29,6 @@ class ConfigSchema {
 const configServer = plainToInstance(ConfigSchema, process.env, {
   enableImplicitConversion: true,
 })
-
-console.log("configServer===>",  configServer);
- 
 
 const e = validateSync(configServer)
 if (e.length > 0) {

@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { PostsController } from './routes/posts/posts.controller'
 import { PostsModule } from './routes/posts/posts.module'
-import { PostsService } from './routes/posts/posts.service'
 import { SharedModule } from './shared/shared.module'
 import { ConfigModule } from '@nestjs/config'
+import { AuthModule } from './routes/auth/auth.module';
 
 @Module({
   imports: [
@@ -14,9 +13,9 @@ import { ConfigModule } from '@nestjs/config'
     }),
     PostsModule,
     SharedModule,
-    
+    AuthModule,
   ],
-  controllers: [AppController, PostsController],
-  providers: [AppService, PostsService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
