@@ -32,24 +32,24 @@ export class AuthService {
 
   async login(body: LoginBodyDTO) {
     const user = await this.prismaService.user.findUnique({
-        where: {
-          email: body.email,
+      where: {
+        email: body.email,
+      },
+    })
+    if (!user) {
+      throw new UnauthorizedException('Account is not exist')
+    }
+    const isPasswordMatch = await this.hashingService.compare(body.password, user.password)
+    if (!isPasswordMatch) {
+      throw new UnauthorizedException([
+        {
+          field: 'password',
+          error: 'Password is incorrect',
         },
-      })
-      if (!user) {
-        throw new UnauthorizedException('Account is not exist')
-      }
-      const isPasswordMatch = await this.hashingService.compare(body.password, user.password)
-      if (!isPasswordMatch) {
-        throw new UnauthorizedException([
-          {
-            field: 'password',
-            error: 'Password is incorrect',
-          },
-        ])
-      }
-      const tokens = this.generateTokens({ userId: user.id })
-      return tokens
+      ])
+    }
+    const tokens = this.generateTokens({ userId: user.id })
+    return tokens
   }
 
   async generateTokens(payload: { userId: number }) {
@@ -59,12 +59,35 @@ export class AuthService {
     ])
     const decodedRefreshToken = await this.tokenService.verifyRefreshToken(refreshToken)
     await this.prismaService.refreshToken.create({
-        data: {
-            token: refreshToken,
-            userId: payload.userId,
-            expiresAt: new Date(decodedRefreshToken.exp * 1000)
-        }
+      data: {
+        token: refreshToken,
+        userId: payload.userId,
+        expiresAt: new Date(decodedRefreshToken.exp * 1000),
+      },
     })
     return { accessToken, refreshToken }
+  }
+
+  async refreshToken(refreshToken: string) {
+    try {
+      const { userId } = await this.tokenService.verifyRefreshToken(refreshToken)
+      const user = await this.prismaService.refreshToken.findFirstOrThrow({
+        where: {
+          token: refreshToken,
+        },
+      })
+      await this.prismaService.refreshToken.delete({
+        where: {
+          token: refreshToken
+        }
+      })
+      const tokens = await this.generateTokens({ userId: userId })
+      return tokens
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+        throw new UnauthorizedException('Refresh token has been revoked')
+      }
+      throw new UnauthorizedException()
+    }
   }
 }
