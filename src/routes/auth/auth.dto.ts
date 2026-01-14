@@ -1,29 +1,48 @@
-import { Exclude, Expose } from "class-transformer";
-import { IsString } from "class-validator";
+import { Exclude, Expose, Type } from 'class-transformer'
+import { IsString } from 'class-validator'
+import { SuccessResDTO } from 'src/shared/shared.dto'
 
 export class LoginBodyDTO {
-    @IsString()
-    email: string;
-    @IsString()
-    password: string;
+  @IsString()
+  email: string
+  @IsString()
+  password: string
+}
+
+export class LoginResDTO {
+  accessToken: string
+  refreshToken: string
+
+  constructor(partial: Partial<LoginResDTO>) {
+    Object.assign(this, partial)
+  }
 }
 
 export class RegisterBodyDTO extends LoginBodyDTO {
-    @IsString()
-    name: string;
-    @IsString()
-    confirmPassword: string;
+  @IsString()
+  name: string
+  @IsString()
+  confirmPassword: string
 }
 
-export class RegisterResDTO {
-    id: number
-    email: string
-    name: string
-    @Exclude() password: string
-    createdAt: Date
-    updatedAt: Date
+export class RegisterData {
+  id: number
+  email: string
+  name: string
+  @Exclude() password: string
+  createdAt: Date
+  updatedAt: Date
 
-    constructor(partial: Partial<RegisterResDTO>) {
-        Object.assign(this, partial)
-    }
+  constructor(partial: Partial<RegisterData>) {
+    Object.assign(this, partial)
+  }
+}
+
+export class RegisterResDTO extends SuccessResDTO {
+  @Type(() => RegisterData)
+  data: RegisterData
+  constructor(partial: Partial<RegisterResDTO>) {
+    super(partial)
+    Object.assign(this, partial)
+  }
 }
