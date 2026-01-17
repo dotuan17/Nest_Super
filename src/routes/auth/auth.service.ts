@@ -73,21 +73,33 @@ export class AuthService {
   async refreshToken(refreshToken: string) {
     try {
       const { userId } = await this.tokenService.verifyRefreshToken(refreshToken)
-      const user = await this.prismaService.refreshToken.findFirstOrThrow({
+      await this.prismaService.refreshToken.delete({
         where: {
           token: refreshToken,
         },
-      })
-      await this.prismaService.refreshToken.delete({
-        where: {
-          token: refreshToken
-        }
       })
       const tokens = await this.generateTokens({ userId: userId })
       return tokens
     } catch (error) {
       if (isNotFoundPrismaError(error)) {
         throw new UnauthorizedException('Refresh token has been revoked')
+      }
+      throw new UnauthorizedException()
+    }
+  }
+
+  async logout(refreshToken: string) {
+    try {
+      await this.tokenService.verifyRefreshToken(refreshToken)
+      await this.prismaService.refreshToken.delete({
+        where: {
+          token: refreshToken,
+        },
+      })
+      return { message: 'Logout thành công' }
+    } catch (error) {
+      if (isNotFoundPrismaError(error)) {
+        throw new UnauthorizedException('Logout thất bại')
       }
       throw new UnauthorizedException()
     }

@@ -14,7 +14,6 @@ export class LoginBodyDTO {
 export class LoginResDTO {
   accessToken: string
   refreshToken: string
-
   constructor(partial: Partial<LoginResDTO>) {
     Object.assign(this, partial)
   }
@@ -49,10 +48,17 @@ export class RegisterResDTO extends SuccessResDTO {
     Object.assign(this, partial)
   }
 }
-
 export class RefreshTokenBodyDTO {
   @IsString()
   refresh_token: string
 }
-
 export class RefreshTokenResDTO extends LoginResDTO{}
+
+export class LogoutBodyDTO extends RefreshTokenBodyDTO{}
+export class logoutResDTO {
+  message: string
+
+  constructor(partial: Partial<logoutResDTO>) {
+    Object.assign(this, partial)
+  }
+}
