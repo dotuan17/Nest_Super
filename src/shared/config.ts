@@ -25,6 +25,8 @@ class ConfigSchema {
   REFRESH_TOKEN_EXPIRES_IN: string
   @IsString()
   PORT: string
+  @IsString()
+  SECRET_API_KEY: string
 }
 const configServer = plainToInstance(ConfigSchema, process.env, {
   enableImplicitConversion: true,

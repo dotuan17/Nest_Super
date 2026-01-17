@@ -1,5 +1,4 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common'
-import { Observable } from 'rxjs'
 import { TokenService } from '../services/token.service'
 import { REQUEST_USER_KEY } from '../constants/auth.constant'
 
