@@ -28,6 +28,7 @@ export class RegisterBodyDTO extends LoginBodyDTO {
 }
 
 export class RegisterData {
+  
   id: number
   email: string
   name: string
