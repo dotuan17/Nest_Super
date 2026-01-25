@@ -1,10 +1,10 @@
 import { Exclude, Expose, Type } from 'class-transformer'
-import { IsString, Length } from 'class-validator'
+import { IsEmail, IsString, Length } from 'class-validator'
 import { Match } from 'src/shared/decorators/custom-validator.decorator'
 import { SuccessResDTO } from 'src/shared/shared.dto'
 
 export class LoginBodyDTO {
-  @IsString()
+  @IsEmail()
   email: string
   @IsString()
   @Length(6, 20, { message:'Mật khẩu từ 6 đến 20 ký tự' })
@@ -28,7 +28,6 @@ export class RegisterBodyDTO extends LoginBodyDTO {
 }
 
 export class RegisterData {
-  
   id: number
   email: string
   name: string
@@ -42,6 +41,7 @@ export class RegisterData {
 }
 
 export class RegisterResDTO extends SuccessResDTO {
+  // vi data la instance cua class RegisterData nen phai dung @Type de dinh nghia cho Nestjs biet
   @Type(() => RegisterData)
   data: RegisterData
   constructor(partial: Partial<RegisterResDTO>) {

@@ -10,8 +10,8 @@ export function Match(property: string, validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          const [relatedPropertyName] = args.constraints
-          const relatedValue = (args.object as any)[relatedPropertyName]
+          const [relatedPropertyName] = args.constraints 
+          const relatedValue = (args.object as any)[relatedPropertyName] //lay gia tri cua password
           return value === relatedValue
         },
         defaultMessage(args: ValidationArguments) {

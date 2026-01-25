@@ -28,6 +28,7 @@ class ConfigSchema {
   @IsString()
   SECRET_API_KEY: string
 }
+// Chuyen object to class de dung class validate
 const configServer = plainToInstance(ConfigSchema, process.env, {
   enableImplicitConversion: true,
 })

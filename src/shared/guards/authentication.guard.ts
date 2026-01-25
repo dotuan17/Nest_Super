@@ -36,13 +36,14 @@ export class AuthenticationGuard implements CanActivate {
           return true
         }
       }
-      throw error
+      throw new UnauthorizedException()
     } else {
       for(const instance of guards){
         const canActivate = await Promise.resolve(instance.canActivate(context)).catch(err => {
           error = err
           return false
         })
+        console.log(canActivate);
         if(!canActivate){
           throw new UnauthorizedException()
         }

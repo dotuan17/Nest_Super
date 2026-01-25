@@ -4,7 +4,7 @@ import envConfig from '../config'
 
 @Injectable()
 export class APIKeyGuard implements CanActivate {
-  constructor(private readonly tokenService: TokenService) {}
+  // constructor(private readonly tokenService: TokenService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest()
     const xAPIKey = request.headers['x-api-key']
